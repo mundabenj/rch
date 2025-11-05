@@ -20,14 +20,28 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 // get the posted data
 $requestBody = file_get_contents("php://input"); // read the raw input data
-$data = json_decode($requestBody, true); // decode the JSON data
 
-if(empty($data['fullname']) || empty($data['email'])) {
-    $data = [
+// decode JSON data
+$JSONData = json_decode($requestBody, true); // decode the JSON data
+
+// retrieve data from JSON or form-data
+$FROMData = [
+    'fullname' => trim($_POST['fullname'] ?? ''),
+    'email' => trim($_POST['email'] ?? ''),
+];
+
+if(!empty($JSONData)) {
+    $StudentData = $JSONData;
+} else {
+    $StudentData = $FROMData;
+}
+
+if(empty($StudentData['fullname']) || empty($StudentData['email'])) {
+    $response = [
         'status' => http_response_code(400), // Bad Request
         'message' => 'Incomplete data. Full name, email are required.'
     ];
-    echo json_encode($data);
+    echo json_encode($response);
     exit();
 }
 
@@ -37,8 +51,8 @@ try {
     $stmt = $pdo->prepare($sql);
 
     // bind parameters
-    $stmt->bindParam(':fullname', $data['fullname']);
-    $stmt->bindParam(':email', $data['email']);
+    $stmt->bindParam(':fullname', $StudentData['fullname']);
+    $stmt->bindParam(':email', $StudentData['email']);
 
     // execute the statement
     if($stmt->execute()) {
@@ -47,8 +61,8 @@ try {
             'message' => 'Student created successfully.',
             'data' => [
                 'userId' => $pdo->lastInsertId(),
-                'fullname' => $data['fullname'],
-                'email' => $data['email']
+                'fullname' => $StudentData['fullname'],
+                'email' => $StudentData['email']
             ]
         ];
         print json_encode($response);
