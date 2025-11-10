@@ -18,11 +18,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     exit();
 }
 
-// prepare select statement
+// Use if condition to fetch single or all students
 if(isset($_GET['userId']) && !empty($_GET['userId'])) {
-    // fetch single user based on userId
+    // fetch single student based on userId
     $userId = intval($_GET['userId']);
 
+    // prepare select statement
     $sql = "SELECT fullname, email FROM users WHERE userId = :userId";
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
@@ -44,6 +45,8 @@ if(isset($_GET['userId']) && !empty($_GET['userId'])) {
             'status' => http_response_code(404), // Not Found
             'message' => 'Student not found.'
         ];
+        echo json_encode($response);
+        exit();
     }
 
 } else {
