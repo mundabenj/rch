@@ -48,7 +48,6 @@ if(isset($_GET['userId']) && !empty($_GET['userId'])) {
         echo json_encode($response);
         exit();
     }
-
 } else {
     // fetch all students
     $sql = "SELECT fullname, email FROM users";
