@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
-// get the posted data
+// get raw data from the request body
 $requestBody = file_get_contents("php://input"); // read the raw input data
 
 // decode JSON data
@@ -30,6 +30,7 @@ $FROMData = [
     'email' => trim($_POST['email'] ?? ''),
 ];
 
+// Determine which data to use: JSON data or form-data (prioritize JSON data if available)
 if(!empty($JSONData)) {
     $StudentData = $JSONData;
 } else {
@@ -45,14 +46,18 @@ if(empty($StudentData['fullname']) || empty($StudentData['email'])) {
     exit();
 }
 
+// Sanitize input data
+$StudentData['fullname'] = addslashes($StudentData['fullname']);
+$StudentData['email'] = filter_var($StudentData['email'], FILTER_SANITIZE_EMAIL);
+
 // prepare an insert statement
 try {
     $sql = "INSERT INTO users (fullname, email) VALUES (:fullname, :email)";
     $stmt = $pdo->prepare($sql);
 
     // bind parameters
-    $stmt->bindParam(':fullname', $StudentData['fullname']);
-    $stmt->bindParam(':email', $StudentData['email']);
+    $stmt->bindParam(':fullname', $StudentData['fullname'], PDO::PARAM_STR);
+    $stmt->bindParam(':email', $StudentData['email'], PDO::PARAM_STR);
 
     // execute the statement
     if($stmt->execute()) {
