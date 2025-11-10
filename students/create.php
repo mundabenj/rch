@@ -50,6 +50,16 @@ if(empty($StudentData['fullname']) || empty($StudentData['email'])) {
 $StudentData['fullname'] = addslashes($StudentData['fullname']);
 $StudentData['email'] = filter_var($StudentData['email'], FILTER_SANITIZE_EMAIL);
 
+// Validate email format
+if (!filter_var($StudentData['email'], FILTER_VALIDATE_EMAIL)) {
+    $response = [
+        'status' => http_response_code(400), // Bad Request
+        'message' => 'Invalid email format.'
+    ];
+    echo json_encode($response);
+    exit();
+}
+
 // prepare an insert statement
 try {
     $sql = "INSERT INTO users (fullname, email) VALUES (:fullname, :email)";
