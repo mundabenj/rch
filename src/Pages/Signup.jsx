@@ -31,7 +31,7 @@ export function Signup() {
                 validate: validateFullname,
               })}
             />
-            {errors.fullname && <span>{errors.fullname.message}</span>}
+            {errors.fullname && <span className="text-danger">{errors.fullname.message}</span>}
         </div>
         <div className="mb-3">
             <label htmlFor="email" className="form-label">Email</label>
