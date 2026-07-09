@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import React from "react";
-import { validateFullname, validateEmail } from "./FormValidation";
+import { validateFullname, validateEmail } from "../Components/FormValidation";
 
 export function Signup() {
   const {
