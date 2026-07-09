@@ -1,33 +1,6 @@
 import { useForm } from "react-hook-form";
 import React from "react";
-
-function validateFullname(value) {
-  if (!value?.trim()) {
-    return "Full name is required";
-  }
-
-  if (value.trim().length < 3) {
-    return "Full name must be at least 3 characters";
-  }
-
-  if (!/^[A-Za-z]+(?:[\s'-][A-Za-z]+)*$/.test(value.trim())) {
-    return "Please enter a valid full name (letters, spaces, apostrophes, hyphens)";
-  }
-
-  return true;
-}
-
-function validateEmail(value) {
-  if (!value?.trim()) {
-    return "Email is required";
-  }
-
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value.trim())) {
-    return "Please enter a valid email address";
-  }
-
-  return true;
-}
+import { validateFullname, validateEmail } from "./FormValidation";
 
 export function Signup() {
   const {
@@ -72,7 +45,7 @@ export function Signup() {
                 validate: validateEmail,
               })}
             />
-            {errors.email && <span>{errors.email.message}</span>}
+            {errors.email && <span className="text-danger">{errors.email.message}</span>}
         </div>
         <button type="submit" className="btn btn-primary">Submit</button>
       </form>
