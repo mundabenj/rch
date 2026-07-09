@@ -7,7 +7,6 @@ export function validateFullname(value) {
     return "Full name must be at least 3 characters";
   }
 
-  
   var fullnameRegex = /^[A-Za-z]+(?:[\s'-][A-Za-z]+)*$/;
   if (!fullnameRegex.test(value.trim())) {
     return "Please enter a valid full name (letters, spaces, apostrophes, hyphens)";
